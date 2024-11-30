@@ -1,0 +1,187 @@
+/* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #000;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+h1, h2, h3, h4, p {
+    margin: 15px;
+}
+
+a {
+    text-decoration: none;
+    color: #fff;
+    font-size: 18px;
+    margin: 10px;
+}
+
+/* Button Styles */
+button, .button {
+    background-color: #FFD700; /* Gold */
+    border: none;
+    padding: 15px 30px;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 50px; /* Oval button */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin: 10px;
+}
+
+button:hover, .button:hover {
+    background-color: #DAA520; /* Darker gold on hover */
+}
+
+button:active, .button:active {
+    background-color: #B8860B; /* Darker gold on click */
+}
+
+button:disabled, .button:disabled {
+    background-color: #A9A9A9;
+    cursor: not-allowed;
+}
+
+/* Loading Screen */
+#loading-screen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+}
+
+#loading-screen h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+#loading-screen img {
+    margin-top: 20px;
+}
+
+/* Section Styles */
+.section {
+    display: none;
+    width: 100%;
+    max-width: 480px; /* For small screen */
+    padding: 20px;
+    text-align: center;
+}
+
+h2, h3 {
+    color: #FFD700;
+}
+
+.timer {
+    font-size: 14px;
+    color: #ddd;
+}
+
+/* Home Section */
+#home-section {
+    display: block;
+}
+
+/* Footer Section */
+.footer {
+    position: fixed;
+    bottom: 10px;
+    left: 0;
+    width: 100%;
+    background-color: #333;
+    padding: 10px;
+    text-align: center;
+}
+
+.footer a {
+    margin: 0 15px;
+    font-size: 18px;
+}
+
+/* Ads Section */
+#ads-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+}
+
+.ads-button-container {
+    background-color: #222;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.ads-button-container span {
+    display: block;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.ads-button-container button {
+    width: 100%;
+    padding: 10px 0;
+}
+
+.ads-button-container p {
+    font-size: 14px;
+    color: #bbb;
+    margin-top: 10px;
+}
+
+/* Withdrawal Form */
+#withdraw-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+#withdraw-form input, #withdraw-form select {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #444;
+    background-color: #333;
+    color: white;
+}
+
+#withdraw-form label {
+    color: #ccc;
+    font-size: 14px;
+}
+
+/* Media Queries for Small Screens */
+@media screen and (max-width: 600px) {
+    .footer a {
+        font-size: 16px;
+    }
+
+    .button, .claim-btn {
+        width: 100%;
+    }
+
+    .section {
+        padding: 10px;
+    }
+
+    .ads-button-container {
+        padding: 10px;
+    }
+}
+
