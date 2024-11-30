@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" style="display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column;">
+        <h1>Loading...</h1>
+        <div>
+            <img src="get-reward-logo.png" alt="Get Reward Logo" style="width: 200px;">
+            <img src="mini-app-logo.png" alt="Mini App Logo" style="width: 100px;">
+        </div>
+    </div>
+
+    <!-- Home Section -->
+    <div id="home-section" class="section" style="display:none;">
+        <h2>Welcome to the Mini App</h2>
+        <div id="user-balance">
+            <p>Balance: $<span id="balance">0.000</span></p>
+        </div>
+        <button id="claim-daily-reward" class="button">Claim Daily Reward</button>
+        <p id="timer-daily-reward" class="timer">Next claim in: 00:00:00</p>
+    </div>
+
+    <!-- Earning Section -->
+    <div id="earn-section" class="section" style="display:none;">
+        <h3>Watch Ads to Earn</h3>
+        <div id="ads-buttons">
+            <!-- Dynamic ad buttons will be inserted here -->
+            
+            <!-- 10 buttons for watching ads -->
+            <div class="ads-button-container">
+                <span>Watch ad 1</span>
+                <button class="claim-btn" onclick="watchAds(0)">Start</button>
+                <p id="timer-0" class="timer">Next claim in: 00:00:00</p>
+            </div>
+            <div class="ads-button-container">
+                <span>Watch ad 2</span>
+                <button class="claim-btn" onclick="watchAds(1)">Start</button>
+                <p id="timer-1" class="timer">Next claim in: 00:00:00</p>
+            </div>
+            <div class="ads-button-container">
+                <span>Watch ad 3</span>
+                <button class="claim-btn" onclick="watchAds(2)">Start</button>
+                <p id="timer-2" class="timer">Next claim in: 00:00:00</p>
+            </div>
+            <div class="ads-button-container">
+                <span>Watch ad 4</span>
+                <button class="claim-btn" onclick="watchAds(3)">Start</button>
+                <p id="timer-3" class="timer">Next claim in: 00:00:00</p>
+            </div>
+            <div class="ads-button-container">
+                <span>Watch ad 5</span>
+                <button class="claim-btn" onclick="watchAds(4)">Start</button>
+                <p id="timer-4" class="timer">Next claim in: 00:00:00</p>
+            </div>
+            <div class="ads-button-container">
+                <span>Watch ad 6</span>
+                <button class="claim-btn" onclick="watchAds(5)">Start</button>
+                <p id="timer-5" class="timer">Next claim in: 00:00:00</p>
+            </div>
+            <div class="ads-button-container">
+                <span>Watch ad 7</span>
+                <button class="claim-btn" onclick="watchAds(6)">Start</button>
+                <p id="timer-6" class="timer">Next claim in: 00:00:00</p>
+            </div>
+            <div class="ads-button-container">
+                <span>Watch ad 8</span>
+                <button class="claim-btn" onclick="watchAds(7)">Start</button>
+                <p id="timer-7" class="timer">Next claim in: 00:00:00</p>
+            </div>
+            <div class="ads-button-container">
+                <span>Watch ad 9</span>
+                <button class="claim-btn" onclick="watchAds(8)">Start</button>
+                <p id="timer-8" class="timer">Next claim in: 00:00:00</p>
+            </div>
+            <div class="ads-button-container">
+                <span>Watch ad 10</span>
+                <button class="claim-btn" onclick="watchAds(9)">Start</button>
+                <p id="timer-9" class="timer">Next claim in: 00:00:00</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Friends Section -->
+    <div id="friends-section" class="section" style="display:none;">
+        <h3>Your Referral Link</h3>
+        <p id="referral-link">https://t.me/yourbot?start=randomReferralCode</p>
+        <button class="button" onclick="copyReferralLink()">Copy Link</button>
+
+        <h4>Referral List</h4>
+        <div id="referral-list">
+            <p>No referrals yet.</p>
+        </div>
+
+        <h4>Referral Earnings</h4>
+        <p id="referral-earnings">$0.00</p>
+        <button class="button" onclick="claimReferralEarnings()">Claim Referral Earnings</button>
+    </div>
+
+    <!-- Withdraw Section -->
+    <div id="withdraw-section" class="section" style="display:none;">
+        <h3>Withdraw Funds</h3>
+        <form id="withdraw-form">
+            <label for="withdraw-amount">Amount:</label>
+            <input type="number" id="withdraw-amount" placeholder="Enter amount">
+            <br>
+            <label for="withdraw-address">Address:</label>
+            <input type="text" id="withdraw-address" placeholder="Enter address">
+            <br>
+            
+            <!-- Withdrawal Method Dropdown -->
+            <label for="withdraw-method">Select Withdraw Method:</label>
+            <select id="withdraw-method">
+                <option value="TON">TON</option>
+                <option value="TRX">TRX</option>
+                <option value="LTC">LTC</option>
+            </select>
+            <br>
+            <button class="button" type="submit">Submit Withdrawal</button>
+        </form>
+        <p id="withdraw-status">No withdrawal made.</p>
+    </div>
+
+    <!-- Footer Section -->
+    <div class="footer">
+        <a href="#" onclick="showSection('home-section')">Home</a>
+        <a href="#" onclick="showSection('earn-section')">Earn</a>
+        <a href="#" onclick="showSection('friends-section')">Friends</a>
+        <a href="#" onclick="showSection('withdraw-section')">Withdraw</a>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
