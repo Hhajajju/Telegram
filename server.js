@@ -1,19 +1,23 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const axios = require('axios'); // For Telegram Bot API calls
+const axios = require('axios');
+const dotenv = require('dotenv');
+
+// Load environment variables from .env file
+dotenv.config();
 
 const app = express();
 const port = 3000;
 
-// MongoDB URI (replace with your MongoDB connection string)
-const mongoURI = 'mongodb://localhost:27017/earningsApp';
+// MongoDB URI (stored in .env file)
+const mongoURI = process.env.MONGO_URI;
 mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Connected to MongoDB'))
   .catch((err) => console.log('MongoDB connection error:', err));
 
-// Telegram Bot Token (replace with your bot token from BotFather)
-const telegramToken = 'YOUR_BOT_TOKEN';
+// Telegram Bot Token (stored in .env file)
+const telegramToken = process.env.TELEGRAM_TOKEN;
 const telegramAPI = `https://api.telegram.org/bot${telegramToken}/`;
 
 // Define the User Schema with necessary fields
@@ -27,8 +31,8 @@ const userSchema = new mongoose.Schema({
   lastWithdrawal: { type: Date },
   dailyClaimTimeRemaining: { type: Number, default: 0 }, // In seconds
   lastClaimed: { type: Date },
-  referralCommissionClaimed: { type: Boolean, default: false }, // Track if referral commission has been claimed
-  lastAdClaimTime: { type: Date }, // Store the last time an ad was claimed
+  referralCommissionClaimed: { type: Boolean, default: false },
+  lastAdClaimTime: { type: Date },
   adCooldownTimeRemaining: { type: Number, default: 0 }, // Cooldown time for the next ad claim (in seconds)
 });
 
@@ -56,7 +60,7 @@ app.get('/api/user/:userId', async (req, res) => {
       lastWithdrawal: user.lastWithdrawal,
       dailyClaimTimeRemaining: user.dailyClaimTimeRemaining,
       referralCommissionClaimed: user.referralCommissionClaimed,
-      adCooldownTimeRemaining: user.adCooldownTimeRemaining, // Add the ad cooldown info
+      adCooldownTimeRemaining: user.adCooldownTimeRemaining,
     });
   } catch (err) {
     return res.status(500).json({ message: 'Error fetching user data', error: err });
@@ -211,25 +215,27 @@ app.post('/api/claim/dailyReward/:userId', async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Check if the user can claim the daily reward
-    const now = new Date();
-    const elapsedTime = user.dailyClaimTimeRemaining ? (now.getTime() / 1000) - user.dailyClaimTimeRemaining : 0;
-    const dailyCooldown = 86400; // 24 hours in seconds
+    const dailyReward = 0.01; // Daily reward amount
 
-    if (elapsedTime < dailyCooldown) {
-      return res.status(400).json({ message: `You can claim your daily reward in ${Math.ceil(dailyCooldown - elapsedTime)} seconds.` });
+    // Check if the user can claim their daily reward
+    const now = new Date();
+    const lastClaimTime = user.lastClaimed ? new Date(user.lastClaimed) : null;
+    const elapsedTime = lastClaimTime ? Math.floor((now - lastClaimTime) / 1000) : null;
+    const remainingCooldown = 24 * 60 * 60 - (elapsedTime || 0); // 24 hours cooldown
+
+    if (remainingCooldown > 0) {
+      return res.status(400).json({ message: `Please wait ${remainingCooldown} seconds before claiming your daily reward.` });
     }
 
-    // Add daily reward to user's balance
-    user.balance += 0.003; // Reward for claiming daily
-    user.dailyClaimTimeRemaining = now.getTime() / 1000; // Reset the cooldown timer
-
+    // Update user balance with the daily reward
+    user.balance += dailyReward;
+    user.lastClaimed = now; // Update last claim time
     await user.save();
 
-    // Send Telegram notification
+    // Send Telegram notification to user
     await axios.post(`${telegramAPI}sendMessage`, {
       chat_id: user.userId,
-      text: `You claimed your daily reward of $0.003! Your new balance is $${user.balance.toFixed(3)}`
+      text: `You claimed your daily reward of $${dailyReward.toFixed(3)}! Your new balance is $${user.balance.toFixed(3)}.`
     });
 
     res.json({
@@ -241,37 +247,7 @@ app.post('/api/claim/dailyReward/:userId', async (req, res) => {
   }
 });
 
-// API to handle withdrawals
-app.post('/api/withdraw/:userId', async (req, res) => {
-  try {
-    const user = await User.findOne({ userId: req.params.userId });
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    const { amount } = req.body;
-    if (amount < 3) {
-      return res.status(400).json({ message: 'Minimum withdrawal amount is $3' });
-    }
-    if (user.balance < amount) {
-      return res.status(400).json({ message: 'Insufficient balance' });
-    }
-
-    // Process withdrawal
-    user.balance -= amount;
-    user.lastWithdrawal = new Date();
-    await user.save();
-
-    res.json({
-      message: 'Withdrawal requested successfully',
-      balance: user.balance.toFixed(3),
-    });
-  } catch (err) {
-    return res.status(500).json({ message: 'Error processing withdrawal', error: err });
-  }
-});
-
-// Start server
+// Start the server
 app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+  console.log(`Server is running on port ${port}`);
 });
